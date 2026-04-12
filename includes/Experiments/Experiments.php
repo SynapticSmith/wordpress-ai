@@ -36,7 +36,6 @@ final class Experiments {
 		\WordPress\AI\Experiments\Review_Notes\Review_Notes::class,
 		\WordPress\AI\Experiments\Summarization\Summarization::class,
 		\WordPress\AI\Experiments\Title_Generation\Title_Generation::class,
-		\WordPress\AI\Experiments\Comment_Moderation\Comment_Moderation::class,
 	);
 
 	/**
