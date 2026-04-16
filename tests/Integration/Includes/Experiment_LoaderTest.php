@@ -162,6 +162,10 @@ class LoaderTest extends WP_UnitTestCase {
 			$this->registry->has_feature( 'title-generation' ),
 			'Title generation experiment should be registered'
 		);
+		$this->assertTrue(
+			$this->registry->has_feature( 'comment_moderation' ),
+			'Comment moderation experiment should be registered'
+		);
 
 		$abilities_explorer_experiment = $this->registry->get_feature( 'abilities-explorer' );
 		$this->assertNotNull( $abilities_explorer_experiment, 'Abilities explorer experiment should exist' );
@@ -196,6 +200,11 @@ class LoaderTest extends WP_UnitTestCase {
 		$this->assertNotNull( $title_experiment, 'Title generation experiment should exist' );
 		$this->assertEquals( 'title-generation', $title_experiment->get_id() );
 		$this->assertEquals( Experiment_Category::EDITOR, $title_experiment->get_category() );
+
+		$comment_moderation_experiment = $this->registry->get_feature( 'comment_moderation' );
+		$this->assertNotNull( $comment_moderation_experiment, 'Comment moderation experiment should exist' );
+		$this->assertEquals( 'comment_moderation', $comment_moderation_experiment->get_id() );
+		$this->assertEquals( Experiment_Category::ADMIN, $comment_moderation_experiment->get_category() );
 	}
 
 	/**

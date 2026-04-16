@@ -481,4 +481,38 @@ class BootstrapTest extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 'settingsFields', $feature );
 		$this->assertSame( array(), $feature['settingsFields'], 'Feature without custom settings should have empty settingsFields' );
 	}
+
+	/**
+	 * Test that Observability Logger table is created on admin_init.
+	 */
+	public function test_observability_logger_admin_init() {
+		global $wpdb;
+		$table_name = $wpdb->prefix . \WordPress\AI\Admin\Observability_Logger::TABLE_NAME;
+		$wpdb->query( "DROP TABLE IF EXISTS {$table_name}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+		do_action( 'admin_init' );
+
+		$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ) === $table_name; // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$this->assertTrue( $table_exists, 'Observability Logger table should be created on admin_init.' );
+	}
+
+	/**
+	 * Test that Site Agent Page is registered on admin_menu.
+	 */
+	public function test_site_agent_page_admin_menu() {
+		global $submenu;
+		do_action( 'admin_menu' );
+
+		$has_page = false;
+		if ( isset( $submenu['tools.php'] ) ) {
+			foreach ( $submenu['tools.php'] as $item ) {
+				if ( 'wp-ai-site-agent' === $item[2] ) {
+					$has_page = true;
+					break;
+				}
+			}
+		}
+
+		$this->assertTrue( $has_page, 'Site Agent Page should be registered in Tools menu.' );
+	}
 }
