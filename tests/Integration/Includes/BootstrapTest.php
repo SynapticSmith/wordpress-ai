@@ -490,7 +490,10 @@ class BootstrapTest extends WP_UnitTestCase {
 		$table_name = $wpdb->prefix . \WordPress\AI\Admin\Observability_Logger::TABLE_NAME;
 		$wpdb->query( "DROP TABLE IF EXISTS {$table_name}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
-		@do_action( 'admin_init' );
+		// Call create_table directly instead of via admin_init to avoid firing all admin_init hooks which
+		// causes side effects like "headers already sent" and "incorrect usage notice for wp_add_privacy_policy_content"
+		// in the test environment.
+		\WordPress\AI\Admin\Observability_Logger::create_table();
 
 		$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ) === $table_name; // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$this->assertTrue( $table_exists, 'Observability Logger table should be created on admin_init.' );
@@ -501,10 +504,12 @@ class BootstrapTest extends WP_UnitTestCase {
 	 */
 	public function test_site_agent_page_admin_menu() {
 		global $submenu;
-		@do_action( 'admin_menu' );
+
+		// Call the registration directly rather than firing all admin_menu hooks.
+		\WordPress\AI\Admin\Site_Agent_Page::add_agent_page();
 
 		$has_page = false;
-		if ( isset( $submenu['tools.php'] ) ) {
+		if ( isset( $submenu['tools.php'] ) && is_array( $submenu['tools.php'] ) ) {
 			foreach ( $submenu['tools.php'] as $item ) {
 				if ( 'wp-ai-site-agent' === $item[2] ) {
 					$has_page = true;
