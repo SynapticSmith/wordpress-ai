@@ -34,7 +34,10 @@ class Site_Agent_PageTest extends WP_UnitTestCase {
 	public function test_render_page_displays_form() {
 		ob_start();
 		Site_Agent_Page::render_page();
-		$output = (string) ob_get_clean();
+		$output = ob_get_clean();
+		if ( false === $output ) {
+			$output = '';
+		}
 
 		$this->assertStringContainsString( '<form method="post" action="">', $output );
 		$this->assertStringContainsString( 'name="wp_ai_agent_command"', $output );
@@ -54,7 +57,10 @@ class Site_Agent_PageTest extends WP_UnitTestCase {
 		} catch ( \Throwable $e ) {
 			// Ignore AI execution errors.
 		}
-		$output = (string) ob_get_clean();
+		$output = ob_get_clean();
+		if ( false === $output ) {
+			$output = '';
+		}
 
 		// Cleanup.
 		unset( $_POST['wp_ai_agent_command'] );

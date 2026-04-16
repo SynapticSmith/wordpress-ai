@@ -87,6 +87,9 @@ class Comment_ModerationTest extends WP_UnitTestCase {
 
 		$this->feature->register_abilities();
 
+		// Run wp_abilities_api_init to register the abilities.
+		do_action( 'wp_abilities_api_init' );
+
 		$ability = wp_get_ability( 'ai/comment_moderation' );
 		$this->assertNotNull( $ability );
 	}
