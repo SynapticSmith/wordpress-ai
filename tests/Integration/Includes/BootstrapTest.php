@@ -490,7 +490,7 @@ class BootstrapTest extends WP_UnitTestCase {
 		$table_name = $wpdb->prefix . \WordPress\AI\Admin\Observability_Logger::TABLE_NAME;
 		$wpdb->query( "DROP TABLE IF EXISTS {$table_name}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
-		do_action( 'admin_init' );
+		@do_action( 'admin_init' );
 
 		$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ) === $table_name; // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$this->assertTrue( $table_exists, 'Observability Logger table should be created on admin_init.' );
@@ -501,7 +501,7 @@ class BootstrapTest extends WP_UnitTestCase {
 	 */
 	public function test_site_agent_page_admin_menu() {
 		global $submenu;
-		do_action( 'admin_menu' );
+		@do_action( 'admin_menu' );
 
 		$has_page = false;
 		if ( isset( $submenu['tools.php'] ) ) {

@@ -8,6 +8,7 @@
 namespace WordPress\AI\Tests\Integration\Includes\Experiments\Comment_Moderation;
 
 use WP_UnitTestCase;
+use function wp_get_ability;
 use WordPress\AI\Experiments\Comment_Moderation\Comment_Moderation;
 use WordPress\AI\Experiments\Experiment_Category;
 
@@ -86,8 +87,8 @@ class Comment_ModerationTest extends WP_UnitTestCase {
 
 		$this->feature->register_abilities();
 
-		$abilities = wp_get_registered_abilities();
-		$this->assertArrayHasKey( 'ai/comment_moderation', $abilities );
+		$ability = wp_get_ability( 'ai/comment_moderation' );
+		$this->assertNotNull( $ability );
 	}
 
 	/**
